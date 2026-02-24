@@ -47,7 +47,7 @@ exports.getUserById = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "Utilisateur non trouvé"
+        message: "Utilisateur introuvable"
       });
     }
 
@@ -74,7 +74,7 @@ exports.updateUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "Utilisateur non trouvé"
+        message: "Utilisateur introuvable"
       });
     }
 
@@ -109,7 +109,7 @@ exports.deleteUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "Utilisateur non trouvé"
+        message: "Utilisateur introuvable"
       });
     }
 
