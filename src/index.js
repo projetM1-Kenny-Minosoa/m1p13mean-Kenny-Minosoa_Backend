@@ -3,6 +3,14 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const shopRoutes = require("./routes/shopRoutes");
+const productRoutes = require("./routes/productRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
+const historyRoutes = require("./routes/historyRoutes");
+
 const app = express();
 
 connectDB();
@@ -10,6 +18,14 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/shops", shopRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/history", historyRoutes);
 
 app.get("/", (req, res) => {
   res.json({ 
