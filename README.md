@@ -35,15 +35,14 @@ API backend pour une plateforme de centre commercial permettant la gestion de bo
     MONGO_URI=
     JWT_SECRET=
     JWT_EXPIRE=
-    NODE_ENV=development
-# Éditez .env avec vos valeurs
+    NODE_ENV=development ==> Éditez .env avec vos valeurs
 
 4. Lancer le serveur
-# Mode développement
+### Mode développement
 - npm run dev
 
-**Information** :
-# Rôles utilisateurs
+## Information :
+### Rôles utilisateurs
 - Admin: Gestion complète (utilisateurs, boutiques, modération)
 - Vendeur: Gestion de sa boutique et ses produits
 - Client: Achat, commandes, avis
