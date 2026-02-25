@@ -4,6 +4,8 @@
 
 ## Lien API : https://api-m1p13mean-kenny-minosoa-backend.onrender.com
 
+## Formatteurs : ESLint || Prettier
+
 ## Description
 
 API backend pour une plateforme de centre commercial permettant la gestion de boutiques, produits, commandes et avis. Développé dans le cadre du projet MEAN Master 1 - Promotion 13.
