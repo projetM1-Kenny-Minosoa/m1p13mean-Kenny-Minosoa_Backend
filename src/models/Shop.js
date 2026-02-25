@@ -2,8 +2,13 @@ const mongoose = require("mongoose");
 
 const shopSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    description: String,
+    name: { type: String, required: true, trim: true },
+    description: { type: String, trim: true },
+    address: { type: String, required: true },
+    contact: {
+      phone: String,
+      email: String
+    },
 
     vendorId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -26,5 +31,8 @@ const shopSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Index for search
+shopSchema.index({ name: "text", description: "text" });
 
 module.exports = mongoose.model("Shop", shopSchema);
