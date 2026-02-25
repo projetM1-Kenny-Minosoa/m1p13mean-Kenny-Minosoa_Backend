@@ -6,7 +6,7 @@ const {
   getShopById,
   updateShop,
   deleteShop,
-  approveShop
+  approveShop,
 } = require("../controllers/shopController");
 const { validateShop } = require("../middleware/validation");
 const auth = require("../middleware/auth");

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const orderSchema = new mongoose.Schema(
   {
     orderNumber: { type: String, unique: true },
-    
+
     clientId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -23,7 +23,7 @@ const orderSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
-        quantity: { type: Number, required: true, min: 1 }
+        quantity: { type: Number, required: true, min: 1 },
       },
     ],
 
@@ -34,13 +34,13 @@ const orderSchema = new mongoose.Schema(
       enum: ["pending", "confirmed", "cancelled"],
       default: "pending",
     },
-    
+
     deliveryDate: Date,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-orderSchema.pre("save", async function(next) {
+orderSchema.pre("save", async function (next) {
   if (!this.orderNumber) {
     const date = new Date();
     const year = date.getFullYear().toString().slice(-2);

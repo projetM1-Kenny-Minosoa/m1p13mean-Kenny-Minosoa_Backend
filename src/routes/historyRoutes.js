@@ -3,7 +3,7 @@ const router = express.Router();
 const {
   getUserHistory,
   getOrderHistory,
-  getAllHistory
+  getAllHistory,
 } = require("../controllers/historyController");
 const auth = require("../middleware/auth");
 const roles = require("../middleware/Roles");

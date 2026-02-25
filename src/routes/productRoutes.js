@@ -6,7 +6,7 @@ const {
   getProductById,
   updateProduct,
   deleteProduct,
-  getProductsByShop
+  getProductsByShop,
 } = require("../controllers/productController");
 const { validateProduct } = require("../middleware/validation");
 const auth = require("../middleware/auth");
@@ -15,7 +15,13 @@ const roles = require("../middleware/Roles");
 router.get("/", getAllProducts);
 router.get("/shop/:shopId", getProductsByShop);
 router.get("/:id", getProductById);
-router.post("/", auth, roles("vendor", "admin"), validateProduct, createProduct);
+router.post(
+  "/",
+  auth,
+  roles("vendor", "admin"),
+  validateProduct,
+  createProduct,
+);
 router.put("/:id", auth, roles("vendor", "admin"), updateProduct);
 router.delete("/:id", auth, roles("vendor", "admin"), deleteProduct);
 

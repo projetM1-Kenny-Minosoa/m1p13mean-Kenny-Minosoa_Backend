@@ -13,7 +13,7 @@ exports.register = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: "Cet email est déjà utilisé"
+        message: "Cet email est déjà utilisé",
       });
     }
 
@@ -21,26 +21,26 @@ exports.register = async (req, res) => {
       name,
       email,
       password,
-      role: role || "client"
+      role: role || "client",
     });
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRE || "7d" }
+      { expiresIn: process.env.JWT_EXPIRE || "7d" },
     );
 
     res.status(201).json({
       success: true,
       data: {
         user,
-        token
-      }
+        token,
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -56,7 +56,7 @@ exports.login = async (req, res) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: "Email ou mot de passe incorrect"
+        message: "Email ou mot de passe incorrect",
       });
     }
 
@@ -64,14 +64,14 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        message: "Email ou mot de passe incorrect"
+        message: "Email ou mot de passe incorrect",
       });
     }
 
     if (!user.isActive) {
       return res.status(401).json({
         success: false,
-        message: "Compte désactivé"
+        message: "Compte désactivé",
       });
     }
 
@@ -81,20 +81,20 @@ exports.login = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRE || "7d" }
+      { expiresIn: process.env.JWT_EXPIRE || "7d" },
     );
 
     res.json({
       success: true,
       data: {
         user,
-        token
-      }
+        token,
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -106,12 +106,12 @@ exports.getMe = async (req, res) => {
   try {
     res.json({
       success: true,
-      data: req.user
+      data: req.user,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };

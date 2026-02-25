@@ -6,12 +6,15 @@ const History = require("../models/History");
 exports.getUserHistory = async (req, res) => {
   try {
     const { page = 1, limit = 20 } = req.query;
-    
+
     // Check authorization
-    if (req.user.role !== "admin" && req.user._id.toString() !== req.params.userId) {
+    if (
+      req.user.role !== "admin" &&
+      req.user._id.toString() !== req.params.userId
+    ) {
       return res.status(403).json({
         success: false,
-        message: "Non autorisé"
+        message: "Non autorisé",
       });
     }
 
@@ -31,13 +34,13 @@ exports.getUserHistory = async (req, res) => {
         page: parseInt(page),
         limit: parseInt(limit),
         total,
-        pages: Math.ceil(total / limit)
-      }
+        pages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -53,12 +56,12 @@ exports.getOrderHistory = async (req, res) => {
 
     res.json({
       success: true,
-      data: history
+      data: history,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -69,7 +72,7 @@ exports.getOrderHistory = async (req, res) => {
 exports.getAllHistory = async (req, res) => {
   try {
     const { type, userId, page = 1, limit = 20 } = req.query;
-    
+
     const query = {};
     if (type) query.type = type;
     if (userId) query.userId = userId;
@@ -90,13 +93,13 @@ exports.getAllHistory = async (req, res) => {
         page: parseInt(page),
         limit: parseInt(limit),
         total,
-        pages: Math.ceil(total / limit)
-      }
+        pages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };

@@ -11,13 +11,13 @@ exports.createReview = async (req, res) => {
     // Check if user already reviewed this product
     const existingReview = await Review.findOne({
       clientId: req.user._id,
-      productId
+      productId,
     });
 
     if (existingReview) {
       return res.status(400).json({
         success: false,
-        message: "Vous avez déjà évalué ce produit"
+        message: "Vous avez déjà évalué ce produit",
       });
     }
 
@@ -28,7 +28,7 @@ exports.createReview = async (req, res) => {
         _id: orderId,
         clientId: req.user._id,
         "products.productId": productId,
-        status: "delivered"
+        status: "delivered",
       });
       isVerifiedPurchase = !!order;
     }
@@ -39,17 +39,17 @@ exports.createReview = async (req, res) => {
       rating,
       comment,
       orderId,
-      isVerifiedPurchase
+      isVerifiedPurchase,
     });
 
     res.status(201).json({
       success: true,
-      data: review
+      data: review,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -59,14 +59,15 @@ exports.createReview = async (req, res) => {
 // @access  Public
 exports.getProductReviews = async (req, res) => {
   try {
-    const reviews = await Review.find({ 
-      productId: req.params.productId 
+    const reviews = await Review.find({
+      productId: req.params.productId,
     })
-    .populate("clientId", "name")
-    .sort("-createdAt");
+      .populate("clientId", "name")
+      .sort("-createdAt");
 
     // Calculate average rating
-    const avgRating = reviews.reduce((acc, rev) => acc + rev.rating, 0) / reviews.length || 0;
+    const avgRating =
+      reviews.reduce((acc, rev) => acc + rev.rating, 0) / reviews.length || 0;
 
     res.json({
       success: true,
@@ -76,19 +77,19 @@ exports.getProductReviews = async (req, res) => {
           total: reviews.length,
           averageRating: avgRating.toFixed(1),
           distribution: {
-            1: reviews.filter(r => r.rating === 1).length,
-            2: reviews.filter(r => r.rating === 2).length,
-            3: reviews.filter(r => r.rating === 3).length,
-            4: reviews.filter(r => r.rating === 4).length,
-            5: reviews.filter(r => r.rating === 5).length
-          }
-        }
-      }
+            1: reviews.filter((r) => r.rating === 1).length,
+            2: reviews.filter((r) => r.rating === 2).length,
+            3: reviews.filter((r) => r.rating === 3).length,
+            4: reviews.filter((r) => r.rating === 4).length,
+            5: reviews.filter((r) => r.rating === 5).length,
+          },
+        },
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -104,12 +105,12 @@ exports.getUserReviews = async (req, res) => {
 
     res.json({
       success: true,
-      data: reviews
+      data: reviews,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -120,18 +121,18 @@ exports.getUserReviews = async (req, res) => {
 exports.updateReview = async (req, res) => {
   try {
     const review = await Review.findById(req.params.id);
-    
+
     if (!review) {
       return res.status(404).json({
         success: false,
-        message: "Avis non trouvé"
+        message: "Avis non trouvé",
       });
     }
 
     if (review.clientId.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
-        message: "Non autorisé"
+        message: "Non autorisé",
       });
     }
 
@@ -143,12 +144,12 @@ exports.updateReview = async (req, res) => {
 
     res.json({
       success: true,
-      data: review
+      data: review,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -159,18 +160,21 @@ exports.updateReview = async (req, res) => {
 exports.deleteReview = async (req, res) => {
   try {
     const review = await Review.findById(req.params.id);
-    
+
     if (!review) {
       return res.status(404).json({
         success: false,
-        message: "Avis non trouvé"
+        message: "Avis non trouvé",
       });
     }
 
-    if (req.user.role !== "admin" && review.clientId.toString() !== req.user._id.toString()) {
+    if (
+      req.user.role !== "admin" &&
+      review.clientId.toString() !== req.user._id.toString()
+    ) {
       return res.status(403).json({
         success: false,
-        message: "Non autorisé"
+        message: "Non autorisé",
       });
     }
 
@@ -178,12 +182,12 @@ exports.deleteReview = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Avis supprimé avec succès"
+      message: "Avis supprimé avec succès",
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };

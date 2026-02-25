@@ -12,21 +12,24 @@ exports.createProduct = async (req, res) => {
     if (!shop) {
       return res.status(404).json({
         success: false,
-        message: "Boutique non trouvée"
+        message: "Boutique non trouvée",
       });
     }
 
-    if (req.user.role !== "admin" && shop.vendorId.toString() !== req.user._id.toString()) {
+    if (
+      req.user.role !== "admin" &&
+      shop.vendorId.toString() !== req.user._id.toString()
+    ) {
       return res.status(403).json({
         success: false,
-        message: "Non autorisé"
+        message: "Non autorisé",
       });
     }
 
     if (shop.status !== "approved") {
       return res.status(400).json({
         success: false,
-        message: "Votre boutique doit être approuvée"
+        message: "Votre boutique doit être approuvée",
       });
     }
 
@@ -37,17 +40,17 @@ exports.createProduct = async (req, res) => {
       stock: stock || 0,
       shopId: shop._id,
       category,
-      images: images || []
+      images: images || [],
     });
 
     res.status(201).json({
       success: true,
-      data: product
+      data: product,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -57,19 +60,19 @@ exports.createProduct = async (req, res) => {
 // @access  Public
 exports.getAllProducts = async (req, res) => {
   try {
-    const { 
-      shopId, 
-      category, 
-      minPrice, 
-      maxPrice, 
+    const {
+      shopId,
+      category,
+      minPrice,
+      maxPrice,
       search,
       sort = "-createdAt",
-      page = 1, 
-      limit = 10 
+      page = 1,
+      limit = 10,
     } = req.query;
-    
+
     const query = { isActive: true };
-    
+
     if (shopId) query.shopId = shopId;
     if (category) query.category = category;
     if (minPrice || maxPrice) {
@@ -96,13 +99,13 @@ exports.getAllProducts = async (req, res) => {
         page: parseInt(page),
         limit: parseInt(limit),
         total,
-        pages: Math.ceil(total / limit)
-      }
+        pages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -112,24 +115,26 @@ exports.getAllProducts = async (req, res) => {
 // @access  Public
 exports.getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id)
-      .populate("shopId", "name status");
+    const product = await Product.findById(req.params.id).populate(
+      "shopId",
+      "name status",
+    );
 
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: "Produit non trouvé"
+        message: "Produit non trouvé",
       });
     }
 
     res.json({
       success: true,
-      data: product
+      data: product,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -140,23 +145,27 @@ exports.getProductById = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    
+
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: "Produit non trouvé"
+        message: "Produit non trouvé",
       });
     }
 
     const shop = await Shop.findById(product.shopId);
-    if (req.user.role !== "admin" && shop.vendorId.toString() !== req.user._id.toString()) {
+    if (
+      req.user.role !== "admin" &&
+      shop.vendorId.toString() !== req.user._id.toString()
+    ) {
       return res.status(403).json({
         success: false,
-        message: "Non autorisé"
+        message: "Non autorisé",
       });
     }
 
-    const { name, description, price, stock, category, images, isActive } = req.body;
+    const { name, description, price, stock, category, images, isActive } =
+      req.body;
 
     if (name) product.name = name;
     if (description) product.description = description;
@@ -170,12 +179,12 @@ exports.updateProduct = async (req, res) => {
 
     res.json({
       success: true,
-      data: product
+      data: product,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -186,19 +195,22 @@ exports.updateProduct = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    
+
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: "Produit non trouvé"
+        message: "Produit non trouvé",
       });
     }
 
     const shop = await Shop.findById(product.shopId);
-    if (req.user.role !== "admin" && shop.vendorId.toString() !== req.user._id.toString()) {
+    if (
+      req.user.role !== "admin" &&
+      shop.vendorId.toString() !== req.user._id.toString()
+    ) {
       return res.status(403).json({
         success: false,
-        message: "Non autorisé"
+        message: "Non autorisé",
       });
     }
 
@@ -206,12 +218,12 @@ exports.deleteProduct = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Produit supprimé avec succès"
+      message: "Produit supprimé avec succès",
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -222,18 +234,18 @@ exports.deleteProduct = async (req, res) => {
 exports.getProductsByShop = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
-    
-    const products = await Product.find({ 
-      shopId: req.params.shopId,
-      isActive: true 
-    })
-    .limit(limit * 1)
-    .skip((page - 1) * limit)
-    .sort("-createdAt");
 
-    const total = await Product.countDocuments({ 
+    const products = await Product.find({
       shopId: req.params.shopId,
-      isActive: true 
+      isActive: true,
+    })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .sort("-createdAt");
+
+    const total = await Product.countDocuments({
+      shopId: req.params.shopId,
+      isActive: true,
     });
 
     res.json({
@@ -243,13 +255,13 @@ exports.getProductsByShop = async (req, res) => {
         page: parseInt(page),
         limit: parseInt(limit),
         total,
-        pages: Math.ceil(total / limit)
-      }
+        pages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
