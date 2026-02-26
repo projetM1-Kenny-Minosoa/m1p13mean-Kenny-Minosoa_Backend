@@ -14,7 +14,7 @@ exports.createShop = async (req, res) => {
       if (existingShop) {
         return res.status(400).json({
           success: false,
-          message: "Vous possédez déjà une boutique"
+          message: "Vous possédez déjà une boutique",
         });
       }
     }
@@ -25,7 +25,7 @@ exports.createShop = async (req, res) => {
       address,
       category,
       contact,
-      vendorId: req.user._id
+      vendorId: req.user._id,
     });
 
     if (req.user.role === "vendor") {
@@ -34,12 +34,12 @@ exports.createShop = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      data: shop
+      data: shop,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -50,7 +50,7 @@ exports.createShop = async (req, res) => {
 exports.getAllShops = async (req, res) => {
   try {
     const { status, category, search, page = 1, limit = 10 } = req.query;
-    
+
     const query = {};
     if (status) query.status = status;
     if (category) query.category = category;
@@ -73,13 +73,13 @@ exports.getAllShops = async (req, res) => {
         page: parseInt(page),
         limit: parseInt(limit),
         total,
-        pages: Math.ceil(total / limit)
-      }
+        pages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -93,29 +93,32 @@ exports.getShopById = async (req, res) => {
       .populate("vendorId", "name email")
       .populate({
         path: "products",
-        options: { limit: 10 }
+        options: { limit: 10 },
       });
 
     if (!shop) {
       return res.status(404).json({
         success: false,
-        message: "Boutique introuvable"
+        message: "Boutique introuvable",
       });
     }
 
-    const productsCount = await Product.countDocuments({ shopId: shop._id, isActive: true });
+    const productsCount = await Product.countDocuments({
+      shopId: shop._id,
+      isActive: true,
+    });
 
     res.json({
       success: true,
       data: {
         ...shop.toObject(),
-        productsCount
-      }
+        productsCount,
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -126,18 +129,21 @@ exports.getShopById = async (req, res) => {
 exports.updateShop = async (req, res) => {
   try {
     const shop = await Shop.findById(req.params.id);
-    
+
     if (!shop) {
       return res.status(404).json({
         success: false,
-        message: "Boutique introuvable"
+        message: "Boutique introuvable",
       });
     }
 
-    if (req.user.role !== "admin" && shop.vendorId.toString() !== req.user._id.toString()) {
+    if (
+      req.user.role !== "admin" &&
+      shop.vendorId.toString() !== req.user._id.toString()
+    ) {
       return res.status(403).json({
         success: false,
-        message: "Autorisation insuffisante"
+        message: "Autorisation insuffisante",
       });
     }
 
@@ -157,12 +163,12 @@ exports.updateShop = async (req, res) => {
 
     res.json({
       success: true,
-      data: shop
+      data: shop,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -173,11 +179,11 @@ exports.updateShop = async (req, res) => {
 exports.deleteShop = async (req, res) => {
   try {
     const shop = await Shop.findById(req.params.id);
-    
+
     if (!shop) {
       return res.status(404).json({
         success: false,
-        message: "Boutique introuvable"
+        message: "Boutique introuvable",
       });
     }
 
@@ -189,12 +195,12 @@ exports.deleteShop = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Suppression de la boutique et ses produits réussie"
+      message: "Suppression de la boutique et ses produits réussie",
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };

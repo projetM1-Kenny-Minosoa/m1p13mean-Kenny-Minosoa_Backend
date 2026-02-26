@@ -4,11 +4,11 @@ const User = require("../models/User");
 module.exports = async (req, res, next) => {
   try {
     const token = req.header("Authorization")?.replace("Bearer ", "");
-    
+
     if (!token) {
-      return res.status(401).json({ 
-        success: false, 
-        message: "Authentification requise" 
+      return res.status(401).json({
+        success: false,
+        message: "Authentification requise",
       });
     }
 
@@ -16,16 +16,16 @@ module.exports = async (req, res, next) => {
     const user = await User.findById(decoded.id).select("-password");
 
     if (!user) {
-      return res.status(401).json({ 
-        success: false, 
-        message: "Utilisateur non trouvé" 
+      return res.status(401).json({
+        success: false,
+        message: "Utilisateur non trouvé",
       });
     }
 
     if (!user.isActive) {
-      return res.status(401).json({ 
-        success: false, 
-        message: "Compte désactivé" 
+      return res.status(401).json({
+        success: false,
+        message: "Compte désactivé",
       });
     }
 
@@ -34,9 +34,10 @@ module.exports = async (req, res, next) => {
     req.userRole = user.role;
     next();
   } catch (error) {
-    res.status(401).json({ 
-      success: false, 
-      message: "Token invalide ou expiré" 
+    console.error(error);
+    res.status(401).json({
+      success: false,
+      message: "Token invalide ou expiré",
     });
   }
 };

@@ -28,25 +28,25 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/history", historyRoutes);
 
 app.get("/", (req, res) => {
-  res.json({ 
-    success: true, 
+  res.json({
+    success: true,
     message: "API Mean fonctionne",
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: `Route ${req.originalUrl} non trouvée`
+    message: `Route ${req.originalUrl} non trouvée`,
   });
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error("Erreur:", err.stack);
   res.status(500).json({
     success: false,
-    message: "Erreur interne du serveur"
+    message: "Erreur interne du serveur",
   });
 });
 

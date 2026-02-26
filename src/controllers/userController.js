@@ -6,7 +6,7 @@ const User = require("../models/User");
 exports.getAllUsers = async (req, res) => {
   try {
     const { role, isActive, page = 1, limit = 20 } = req.query;
-    
+
     const query = {};
     if (role) query.role = role;
     if (isActive !== undefined) query.isActive = isActive === "true";
@@ -26,13 +26,13 @@ exports.getAllUsers = async (req, res) => {
         page: parseInt(page),
         limit: parseInt(limit),
         total,
-        pages: Math.ceil(total / limit)
-      }
+        pages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -43,22 +43,22 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).populate("shopId");
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "Utilisateur introuvable"
+        message: "Utilisateur introuvable",
       });
     }
 
     res.json({
       success: true,
-      data: user
+      data: user,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -74,7 +74,7 @@ exports.updateUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "Utilisateur introuvable"
+        message: "Utilisateur introuvable",
       });
     }
 
@@ -89,12 +89,12 @@ exports.updateUser = async (req, res) => {
 
     res.json({
       success: true,
-      data: user
+      data: user,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -105,11 +105,11 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "Utilisateur introuvable"
+        message: "Utilisateur introuvable",
       });
     }
 
@@ -117,12 +117,12 @@ exports.deleteUser = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Utilisateur supprimé avec succès"
+      message: "Utilisateur supprimé avec succès",
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };

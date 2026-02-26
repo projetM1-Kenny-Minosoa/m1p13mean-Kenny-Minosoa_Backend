@@ -5,7 +5,7 @@ const {
   getProductReviews,
   updateReview,
   deleteReview,
-  getUserReviews
+  getUserReviews,
 } = require("../controllers/reviewController");
 const { validateReview } = require("../middleware/validation");
 const auth = require("../middleware/auth");

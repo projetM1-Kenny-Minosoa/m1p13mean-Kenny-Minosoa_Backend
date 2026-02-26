@@ -9,7 +9,7 @@ const History = require("../models/History");
 exports.createOrder = async (req, res) => {
   try {
     const { products, shopId, shippingAddress, paymentMethod } = req.body;
-    
+
     let total = 0;
     const orderProducts = [];
 
@@ -19,14 +19,14 @@ exports.createOrder = async (req, res) => {
       if (!product) {
         return res.status(404).json({
           success: false,
-          message: `Produit ${item.productId} non trouvé`
+          message: `Produit ${item.productId} non trouvé`,
         });
       }
-      
+
       if (!product.isActive) {
         return res.status(400).json({
           success: false,
-          message: `Produit ${product.name} n'est pas disponible`
+          message: `Produit ${product.name} n'est pas disponible`,
         });
       }
 
@@ -34,7 +34,7 @@ exports.createOrder = async (req, res) => {
         productId: product._id,
         quantity: item.quantity,
         priceAtPurchase: product.price,
-        name: product.name
+        name: product.name,
       });
 
       total += product.price * item.quantity;
@@ -47,7 +47,7 @@ exports.createOrder = async (req, res) => {
       total,
       shippingAddress,
       paymentMethod,
-      status: "pending"
+      status: "pending",
     });
 
     // Create history entry
@@ -59,18 +59,18 @@ exports.createOrder = async (req, res) => {
       details: {
         status: "pending",
         total,
-        products: orderProducts
-      }
+        products: orderProducts,
+      },
     });
 
     res.status(201).json({
       success: true,
-      data: order
+      data: order,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -81,7 +81,7 @@ exports.createOrder = async (req, res) => {
 exports.getAllOrders = async (req, res) => {
   try {
     const { status, page = 1, limit = 10 } = req.query;
-    
+
     const query = {};
     if (status) query.status = status;
 
@@ -102,13 +102,13 @@ exports.getAllOrders = async (req, res) => {
         page: parseInt(page),
         limit: parseInt(limit),
         total,
-        pages: Math.ceil(total / limit)
-      }
+        pages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -125,12 +125,12 @@ exports.getUserOrders = async (req, res) => {
 
     res.json({
       success: true,
-      data: orders
+      data: orders,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -141,11 +141,11 @@ exports.getUserOrders = async (req, res) => {
 exports.getShopOrders = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).populate("shopId");
-    
+
     if (!user.shopId) {
       return res.status(400).json({
         success: false,
-        message: "Vous n'avez pas de boutique"
+        message: "Vous n'avez pas de boutique",
       });
     }
 
@@ -156,12 +156,12 @@ exports.getShopOrders = async (req, res) => {
 
     res.json({
       success: true,
-      data: orders
+      data: orders,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -179,26 +179,29 @@ exports.getOrderById = async (req, res) => {
     if (!order) {
       return res.status(404).json({
         success: false,
-        message: "Commande non trouvée"
+        message: "Commande non trouvée",
       });
     }
 
     // Check authorization
-    if (req.user.role === "client" && order.clientId._id.toString() !== req.user._id.toString()) {
+    if (
+      req.user.role === "client" &&
+      order.clientId._id.toString() !== req.user._id.toString()
+    ) {
       return res.status(403).json({
         success: false,
-        message: "Non autorisé"
+        message: "Non autorisé",
       });
     }
 
     res.json({
       success: true,
-      data: order
+      data: order,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -209,12 +212,12 @@ exports.getOrderById = async (req, res) => {
 exports.updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
-    
+
     const order = await Order.findById(req.params.id);
     if (!order) {
       return res.status(404).json({
         success: false,
-        message: "Commande non trouvée"
+        message: "Commande non trouvée",
       });
     }
 
@@ -230,17 +233,17 @@ exports.updateOrderStatus = async (req, res) => {
       userId: req.user._id,
       type: "status_changed",
       description: `Statut de la commande changé à ${status}`,
-      details: { status }
+      details: { status },
     });
 
     res.json({
       success: true,
-      data: order
+      data: order,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -251,26 +254,29 @@ exports.updateOrderStatus = async (req, res) => {
 exports.cancelOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
-    
+
     if (!order) {
       return res.status(404).json({
         success: false,
-        message: "Commande non trouvée"
+        message: "Commande non trouvée",
       });
     }
 
     // Check authorization
-    if (req.user.role === "client" && order.clientId.toString() !== req.user._id.toString()) {
+    if (
+      req.user.role === "client" &&
+      order.clientId.toString() !== req.user._id.toString()
+    ) {
       return res.status(403).json({
         success: false,
-        message: "Non autorisé"
+        message: "Non autorisé",
       });
     }
 
     if (order.status !== "pending") {
       return res.status(400).json({
         success: false,
-        message: "Seules les commandes en attente peuvent être annulées"
+        message: "Seules les commandes en attente peuvent être annulées",
       });
     }
 
@@ -285,17 +291,17 @@ exports.cancelOrder = async (req, res) => {
       userId: req.user._id,
       type: "order_cancelled",
       description: "Commande annulée",
-      details: { reason: req.body.reason }
+      details: { reason: req.body.reason },
     });
 
     res.json({
       success: true,
-      data: order
+      data: order,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };

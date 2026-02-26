@@ -7,7 +7,7 @@ const {
   updateOrderStatus,
   getUserOrders,
   getShopOrders,
-  cancelOrder
+  cancelOrder,
 } = require("../controllers/orderController");
 const { validateOrder } = require("../middleware/validation");
 const auth = require("../middleware/auth");

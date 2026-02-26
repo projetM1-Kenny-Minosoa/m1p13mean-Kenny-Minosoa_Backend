@@ -7,7 +7,7 @@ const shopSchema = new mongoose.Schema(
     address: { type: String, required: true },
     contact: {
       phone: String,
-      email: String
+      email: String,
     },
 
     vendorId: {
@@ -29,7 +29,7 @@ const shopSchema = new mongoose.Schema(
       default: "pending",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Index for search
