@@ -34,6 +34,7 @@ module.exports = async (req, res, next) => {
     req.userRole = user.role;
     next();
   } catch (error) {
+    console.error(error);
     res.status(401).json({
       success: false,
       message: "Token invalide ou expiré",
